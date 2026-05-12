@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Wikipedia Game: Funky Dictionary</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,6 +30,7 @@
       background-size: 20px 20px;
       color: var(--text-main);
       height: 100vh;
+      height: 100dvh;
       margin: 0;
       display: flex;
       justify-content: center;
@@ -52,7 +53,8 @@
       background: var(--surface);
       width: 100%;
       max-width: 1200px;
-      height: 95vh;
+      height: 100%;
+      max-height: 95dvh;
       border: 4px solid var(--border);
       box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--border);
       padding: 1.5rem;
@@ -74,6 +76,8 @@
       cursor: pointer;
       box-shadow: 4px 4px 0px var(--border);
       transition: all 0.1s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .btn:hover:not(:disabled) {
@@ -96,7 +100,7 @@
     }
 
     .btn-small {
-      padding: 0.4rem 0.8rem;
+      padding: 0.6rem 0.8rem;
       font-size: 0.9rem;
       background-color: var(--accent);
       color: var(--text-main);
@@ -104,8 +108,10 @@
 
     .btn-reroll {
       background-color: var(--surface);
-      height: fit-content;
-      align-self: center;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     /* --- Loading Spinner --- */
@@ -114,8 +120,8 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
+      right: 0;
+      bottom: 0;
       background: rgba(255, 255, 255, 0.95);
       z-index: 100;
       justify-content: center;
@@ -178,9 +184,10 @@
       flex-direction: column;
       justify-content: center;
       text-align: center;
+      height: 100%;
+      box-sizing: border-box;
     }
 
-    /* Target Word as a Clickable Button */
     .clickable-stat {
       cursor: pointer;
       background: var(--accent);
@@ -188,6 +195,7 @@
       position: relative;
       margin: 0 auto;
       min-width: 200px;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .clickable-stat:hover {
@@ -253,6 +261,7 @@
       text-shadow: 3px 3px 0px var(--accent);
       line-height: 1.1;
       margin: 0;
+      word-wrap: break-word;
     }
 
     /* Full Width Choices Grid */
@@ -275,12 +284,13 @@
       padding: 0.5rem 1rem 1.5rem 0.5rem;
       align-content: start;
       height: 100%;
+      -webkit-overflow-scrolling: touch;
     }
 
     .def-card {
       background: #f8f9fa;
       border: 3px solid var(--border);
-      padding: 1.2rem;
+      padding: 1.5rem 1.2rem;
       font-size: 1.1rem;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -288,6 +298,7 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .def-card:hover {
@@ -339,28 +350,28 @@
     .modal-content {
       background: var(--surface);
       border: 4px solid var(--border);
-      box-shadow: 12px 12px 0 var(--primary);
-      padding: 3rem 2.5rem;
+      box-shadow: 8px 8px 0 var(--primary);
+      padding: 3rem 1.5rem 1.5rem 1.5rem;
       max-width: 800px;
       width: 100%;
       text-align: center;
       position: relative;
-      max-height: 85vh;
+      max-height: 85dvh;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .modal-content.victory {
-      box-shadow: 12px 12px 0 var(--success);
+      box-shadow: 8px 8px 0 var(--success);
       background: #e6ffed;
     }
 
-    /* Active Definition Text inside Popup */
     .definition-text-wrapper {
       display: inline-block;
       text-align: center;
       line-height: 1.8;
       font-size: 1.8rem;
-      padding: 1rem;
+      padding: 0.5rem;
     }
 
     .clickable-word {
@@ -372,8 +383,10 @@
       text-decoration-color: var(--primary);
       transition: all 0.2s ease;
       padding: 0 4px;
+      -webkit-tap-highlight-color: transparent;
     }
 
+    .clickable-word:active,
     .clickable-word:hover {
       background-color: var(--primary);
       color: white;
@@ -381,24 +394,17 @@
 
     .close-modal-btn {
       position: absolute;
-      top: 1rem;
-      right: 1.5rem;
+      top: 0.5rem;
+      right: 0.5rem;
       background: var(--bg);
       border: 3px solid var(--border);
       font-family: 'Bungee', cursive;
       font-size: 1.2rem;
-      padding: 0.2rem 0.8rem;
+      padding: 0.5rem 1rem;
       cursor: pointer;
       box-shadow: 3px 3px 0 var(--border);
       transition: all 0.1s ease;
       z-index: 10;
-    }
-
-    .close-modal-btn:hover {
-      background: var(--primary);
-      color: white;
-      transform: translate(-2px, -2px);
-      box-shadow: 5px 5px 0 var(--border);
     }
 
     .close-modal-btn:active {
@@ -408,16 +414,17 @@
 
     .hint-def-list {
       text-align: left;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       margin-bottom: 2rem;
       line-height: 1.6;
-      padding-left: 1.5rem;
+      padding-left: 0;
+      list-style: none;
       font-weight: 600;
     }
 
     .hint-def-list li {
       margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
+      padding-bottom: 1rem;
       border-bottom: 2px dashed #ddd;
     }
 
@@ -449,6 +456,7 @@
       padding-bottom: 0.5rem;
       flex-grow: 1;
       align-items: center;
+      -webkit-overflow-scrolling: touch;
     }
 
     .history-word {
@@ -469,23 +477,18 @@
 
     /* Custom Scrollbars */
     ::-webkit-scrollbar {
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
     }
 
     ::-webkit-scrollbar-track {
       background: transparent;
-      border-left: 2px solid #eee;
     }
 
     ::-webkit-scrollbar-thumb {
       background: var(--border);
-      border-radius: 0;
+      border-radius: 4px;
       border: 2px solid var(--surface);
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--primary);
     }
 
     /* --- Toast Notification --- */
@@ -493,7 +496,7 @@
       position: fixed;
       bottom: 2rem;
       left: 50%;
-      transform: translateX(-50%) translateY(100px);
+      transform: translateX(-50%) translateY(150px);
       background: var(--primary);
       color: white;
       border: 3px solid var(--border);
@@ -504,11 +507,89 @@
       opacity: 0;
       transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       z-index: 2000;
+      width: 80%;
+      text-align: center;
     }
 
     .toast.show {
       transform: translateX(-50%) translateY(0);
       opacity: 1;
+    }
+
+    /* =========================================
+       📱 MOBILE RESPONSIVE MEDIA QUERIES 📱
+       ========================================= */
+    @media (max-width: 768px) {
+      body {
+        padding: 0.5rem;
+      }
+
+      .container {
+        padding: 1rem 0.8rem;
+        border-width: 3px;
+      }
+
+      .game-header {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "reroll moves"
+          "target target";
+        gap: 0.8rem;
+      }
+
+      .game-header>div:nth-child(1) {
+        grid-area: reroll;
+      }
+
+      .game-header>div:nth-child(2) {
+        grid-area: target;
+      }
+
+      .game-header>div:nth-child(3) {
+        grid-area: moves;
+        text-align: left;
+      }
+
+      .stat-block {
+        width: 100%;
+        padding: 0.5rem;
+      }
+
+      .clickable-stat {
+        min-width: unset;
+      }
+
+      .stat-value {
+        font-size: 1.5rem;
+      }
+
+      #setupSection h1 {
+        font-size: 3rem !important;
+      }
+
+      #setupSection p {
+        font-size: 1.1rem !important;
+      }
+
+      .word-display {
+        font-size: 2.2rem;
+      }
+
+      .definition-text-wrapper {
+        font-size: 1.4rem;
+        line-height: 1.6;
+      }
+
+      #targetHintModal h2 {
+        font-size: 1.8rem !important;
+        margin-top: 1rem;
+      }
+
+      #choicesArea {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        padding-right: 0.5rem;
+      }
     }
   </style>
 </head>
@@ -519,7 +600,8 @@
     <div id="loader">
       <div class="spin">🌀</div>
       <div id="loaderText">Loading...</div>
-      <div id="subLoaderText" style="font-family: 'Space Grotesk'; font-size: 1rem; margin-top: 1rem; color: #000;">
+      <div id="subLoaderText"
+        style="font-family: 'Space Grotesk'; font-size: 1rem; margin-top: 1rem; color: #000; text-align: center; padding: 0 1rem;">
       </div>
     </div>
 
@@ -529,18 +611,18 @@
       <p style="font-size: 1.3rem; font-weight: 600; max-width: 600px; line-height: 1.6;">
         Navigate from a RANDOM start word to a RANDOM target word! Beware: Some words are dead ends. Just Reroll!
       </p>
-      <button id="startGameBtn" class="btn" style="font-size: 1.5rem; padding: 1rem 2rem;" disabled>Loading 10k
-        Dictionary...</button>
+      <button id="startGameBtn" class="btn"
+        style="font-size: 1.5rem; padding: 1rem 2rem; width: 100%; max-width: 300px;">Start Game</button>
     </div>
 
     <!-- GAME SCREEN -->
     <div id="gameSection">
 
-      <!-- Top Bar: Now a balanced 3-column Grid -->
+      <!-- Top Bar: Mobile Optimized Grid -->
       <div class="game-header">
-        <div style="text-align: left;">
-          <button class="btn btn-small btn-reroll" onclick="startNewGame()" title="Start a fresh game">🎲
-            Reroll</button>
+        <div>
+          <button class="btn btn-small btn-reroll" onclick="startNewGame()" title="Start a fresh game"
+            style="width: 100%;">🎲 Reroll</button>
         </div>
 
         <div class="stat-block clickable-stat" onclick="showTargetHint()" title="Click to view target definition">
@@ -548,9 +630,9 @@
           <div id="targetDisplay" class="stat-value"></div>
         </div>
 
-        <div style="text-align: right;">
-          <div class="stat-block" style="background: var(--success); display: inline-flex;">
-            <div class="stat-label">Moves</div>
+        <div>
+          <div class="stat-block" style="background: var(--success); display: flex;">
+            <div class="stat-label" style="justify-content: center;">Moves</div>
             <div id="movesDisplay" class="stat-value text-main">0</div>
           </div>
         </div>
@@ -601,10 +683,11 @@
   <!-- VICTORY MODAL -->
   <div id="victoryOverlay" class="modal-overlay">
     <div class="modal-content victory">
-      <h2 style="font-size: 4rem; margin-bottom: 0;">AWESOME! 🎉</h2>
-      <p style="font-size: 1.8rem; font-weight: bold; margin: 2rem 0;">You reached the target in <span id="finalMoves"
-          style="color: var(--primary); font-size: 2.5rem; padding: 0 0.5rem;"></span> moves.</p>
-      <button class="btn" style="font-size: 1.5rem;" onclick="startNewGame()">Play Again</button>
+      <h2 style="font-size: 3rem; margin-bottom: 0;">AWESOME! 🎉</h2>
+      <p style="font-size: 1.5rem; font-weight: bold; margin: 2rem 0;">You reached the target in <br><span
+          id="finalMoves" style="color: var(--primary); font-size: 3rem; padding: 0 0.5rem; display: block;"></span>
+        moves.</p>
+      <button class="btn" style="font-size: 1.5rem; width: 100%;" onclick="startNewGame()">Play Again</button>
     </div>
   </div>
 
@@ -613,10 +696,57 @@
   </div>
 
   <script>
-    let wordBank = []; // Will hold our 10,000 words
-
-    // Fallback list just in case the GitHub raw fetch fails
-    const fallbackWords = ["apple", "ocean", "mountain", "tiger", "shadow", "whisper", "engine", "river", "window", "planet", "guitar", "rocket", "galaxy", "storm", "computer", "internet"];
+    // 400 highly-curated, fun, standard English words
+    const wordBank = [
+      "apple", "ocean", "mountain", "tiger", "shadow", "whisper", "engine", "river", "window", "mirror",
+      "planet", "forest", "summer", "winter", "memory", "thunder", "silence", "journey", "crystal", "dragon",
+      "castle", "robot", "ghost", "puzzle", "magic", "secret", "pocket", "camera", "guitar", "melody",
+      "rocket", "galaxy", "comet", "desert", "diamond", "compass", "anchor", "beacon", "lantern", "bridge",
+      "tower", "echo", "breeze", "storm", "flame", "frost", "velvet", "iron", "silver", "gold",
+      "copper", "stone", "water", "fire", "earth", "wind", "light", "dark", "star", "moon",
+      "sun", "cloud", "rain", "snow", "ice", "flower", "tree", "leaf", "root", "seed",
+      "bird", "fish", "bear", "wolf", "fox", "lion", "snake", "horse", "book", "paper",
+      "pen", "clock", "shoe", "hat", "coat", "door", "wall", "floor", "ceiling", "roof",
+      "house", "room", "city", "town", "street", "road", "car", "train", "ship", "plane",
+      "wheel", "wing", "tail", "head", "face", "eye", "ear", "mouth", "nose", "hand",
+      "foot", "arm", "leg", "heart", "mind", "soul", "dream", "idea", "thought", "word",
+      "song", "dance", "game", "art", "color", "shape", "line", "circle", "square", "triangle",
+      "number", "time", "space", "force", "energy", "matter", "sound", "heat", "cold", "life",
+      "death", "love", "hope", "fear", "joy", "sorrow", "peace", "war", "truth", "lie",
+      "friend", "enemy", "computer", "internet", "chocolate", "coffee", "music", "science", "history", "nature",
+      "animal", "human", "family", "child", "parent", "school", "work", "money", "food", "clothes",
+      "phone", "bottle", "chair", "table", "bed", "sleep", "morning", "night", "day", "week",
+      "month", "year", "island", "beach", "sand", "wave", "shell", "boat", "sail", "captain",
+      "pirate", "treasure", "map", "globe", "world", "country", "language", "culture", "religion", "philosophy",
+      "logic", "math", "physics", "chemistry", "biology", "medicine", "doctor", "hospital", "patient", "disease",
+      "health", "body", "brain", "blood", "bone", "skin", "hair", "smile", "laugh", "cry",
+      "tear", "voice", "speech", "listen", "hear", "see", "look", "watch", "taste", "smell",
+      "touch", "feel", "walk", "run", "jump", "fly", "swim", "dive", "climb", "fall",
+      "push", "pull", "throw", "catch", "kick", "punch", "fight", "win", "lose", "play",
+      "study", "read", "write", "draw", "paint", "sing", "act", "movie", "theater", "stage",
+      "audience", "actor", "director", "writer", "poet", "novel", "story", "poem", "letter", "message",
+      "sign", "symbol", "signal", "code", "password", "key", "lock", "safebox", "doorbell", "alarm",
+      "danger", "safe", "rescue", "hero", "villain", "monster", "alien", "ufo", "spacecraft", "astronaut",
+      "telescope", "microscope", "atom", "molecule", "cell", "virus", "bacteria", "plant", "fungus", "kingdom",
+      "species", "evolution", "fossil", "dinosaur", "museum", "gallery", "exhibition", "collection", "hobby", "sport",
+      "team", "player", "coach", "referee", "ball", "bat", "racket", "net", "goal", "score",
+      "champion", "medal", "trophy", "prize", "reward", "punishment", "law", "rule", "judge", "court",
+      "prison", "police", "crime", "thief", "murder", "steal", "rob", "hide", "seek", "find",
+      "search", "discover", "invent", "create", "build", "destroy", "break", "fix", "repair", "tool",
+      "hammer", "nail", "screw", "wood", "metal", "plastic", "glass", "cloth", "leather", "rubber",
+      "cotton", "wool", "silk", "thread", "needle", "sew", "knit", "weave", "pattern", "design",
+      "style", "fashion", "trend", "popular", "famous", "celebrity", "fan", "crowd", "mob", "riot",
+      "strike", "protest", "vote", "election", "president", "king", "queen", "prince", "princess", "knight",
+      "sword", "shield", "bow", "arrow", "spear", "armor", "battle", "army", "soldier", "general",
+      "camp", "tent", "smoke", "ash", "dust", "dirt", "mud", "clay", "rock", "pebble",
+      "boulder", "hill", "valley", "canyon", "cliff", "cave", "tunnel", "mine", "ruby", "emerald",
+      "sapphire", "pearl", "jewelry", "ring", "necklace", "bracelet", "second", "minute", "hour", "decade",
+      "century", "millennium", "past", "present", "future", "remember", "forget", "think", "know", "learn",
+      "teach", "student", "teacher", "college", "university", "class", "course", "exam", "test", "grade",
+      "degree", "diploma", "job", "career", "boss", "worker", "salary", "wage", "coin", "bill",
+      "bank", "wealth", "poor", "rich", "poverty", "charity", "give", "take", "borrow", "lend",
+      "buy", "sell", "shop", "store", "market", "price", "cost", "value", "cheap", "expensive"
+    ];
 
     let currentWord = "";
     let targetWord = "";
@@ -635,30 +765,6 @@
     const modalDefContent = document.getElementById('modalDefContent');
 
     startBtn.addEventListener('click', startNewGame);
-
-    // --- Load the 10,000 Word Dictionary ---
-    async function loadDictionary() {
-      try {
-        // Fetching the top 10,000 English words (filtered for no swears)
-        const response = await fetch('https://raw.githubusercontent.com/first20hours/google-10000-english/master/google-10000-english-no-swears.txt');
-        if (!response.ok) throw new Error("Network response was not ok");
-
-        const text = await response.text();
-        // Split by newlines and filter out words shorter than 3 letters
-        wordBank = text.split(/\r?\n/).filter(w => w.trim().length >= 3);
-
-        startBtn.textContent = "Start Game";
-        startBtn.disabled = false;
-      } catch (error) {
-        console.error("Failed to load 10k dictionary, using fallback.", error);
-        wordBank = fallbackWords;
-        startBtn.textContent = "Start Game";
-        startBtn.disabled = false;
-      }
-    }
-
-    // Start loading as soon as the script runs
-    loadDictionary();
 
     // --- API Logic ---
     async function fetchWordDefinition(word) {
@@ -688,7 +794,6 @@
     async function getValidRandomWord() {
       while (true) {
         try {
-          // Select a random word from our massively expanded 10k word bank
           const randomIndex = Math.floor(Math.random() * wordBank.length);
           const word = wordBank[randomIndex].toLowerCase();
 
@@ -834,7 +939,7 @@
       if (targetDefinitions && targetDefinitions.length > 0) {
         targetDefinitions.slice(0, 3).forEach(def => {
           const li = document.createElement('li');
-          li.innerHTML = `<strong style="font-family:'Bungee',cursive; font-size:0.8rem; padding: 0.2rem 0.5rem; background: var(--text-main); color: var(--surface); margin-right: 0.5rem; vertical-align: middle;">${def.partOfSpeech}</strong> ${def.text}`;
+          li.innerHTML = `<strong style="font-family:'Bungee',cursive; font-size:0.8rem; padding: 0.2rem 0.5rem; background: var(--text-main); color: var(--surface); margin-right: 0.5rem; vertical-align: middle;">${def.partOfSpeech}</strong> <br><br> ${def.text}`;
           list.appendChild(li);
         });
       } else {
