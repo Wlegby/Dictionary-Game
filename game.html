@@ -22,6 +22,7 @@
       --radar: #9900ff;
       --hint: #ff8800;
       --border: #000000;
+      --target: #00E5FF;
       --shadow-offset: 6px;
     }
 
@@ -40,6 +41,37 @@
       padding: 1rem;
       box-sizing: border-box;
       overflow: hidden;
+    }
+
+    /* Highlight specifically for the Hint word */
+    .hint-highlight {
+      border-color: var(--hint) !important;
+      animation: softPulse 1s ease-in-out infinite !important;
+    }
+
+    /* A soft "breathing" effect is often even better for hints */
+    @keyframes softPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); } /* Only grows by 1% */
+    }
+
+    .shake-target {
+      /* Choosing the wobble, but made it slow and smooth */
+      animation: softPulse 1s ease-in-out infinite;
+      
+      /* Adding a subtle border transition so it feels intentional */
+      transition: border-color 0.3s ease;
+      border-color: var(--primary) !important; 
+      background-color: var(--target) !important;
+    }
+
+    /* Highlight for the specific target word inside the modal */
+    .target-highlight {
+      background-color: var(--success) !important;
+      color: var(--text-main) !important;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      padding: 0 4px;
     }
 
     h1, h2, h3 {
@@ -615,7 +647,7 @@
       "compass", "anchor", "beacon", "lantern", "bridge", "tower", "echo", "breeze", "storm", "flame",
       "frost", "velvet", "iron", "silver", "gold", "copper", "stone", "fire", "moon", "sun",
       "cloud", "rain", "snow", "ice", "flower", "leaf", "root", "seed", "bird", "bear",
-      "wolf", "fox", "lion", "snake", "horse", "book", "pen", "clock", "shoe", "hat",
+      "wolf", "fox", "lion", "snake", "horse", "book", "pen", "penis", "clock", "shoe", "hat",
       "coat", "ceiling", "roof", "city", "car", "train", "ship", "plane", "wheel", "wing",
       "tail", "eye", "ear", "nose", "leg", "soul", "dance", "art", "shape", "circle",
       "square", "triangle", "matter", "heat", "cold", "death", "joy", "sorrow", "war", "lie",
@@ -650,6 +682,7 @@
     let pathHistory = [];
     let moves = 0;
     let toastTimeout;
+    let currentDefinitions = []; // Add this to remember what we are looking at
     
     // RADAR CACHE STATE
     let cachedRadarPath = null;
@@ -774,14 +807,42 @@
         document.getElementById('victoryOverlay').style.display = 'flex';
         return;
       }
+      currentDefinitions = definitions; // SAVE the definitions here
       renderChoices(definitions);
     }
 
     function renderChoices(definitions) {
       choicesArea.innerHTML = '';
+      
+      // 1. Identify the Target Regex
+      const targetRegex = new RegExp(`\\b${targetWord}\\b`, 'i');
+      
+      // 2. Identify the Hint Word (if a radar path exists)
+      let hintWord = null;
+      if (cachedRadarPath) {
+        const currentIndex = cachedRadarPath.indexOf(currentWord);
+        if (currentIndex !== -1 && currentIndex < cachedRadarPath.length - 1) {
+          hintWord = cachedRadarPath[currentIndex + 1];
+        }
+      }
+      const hintRegex = hintWord ? new RegExp(`\\b${hintWord}\\b`, 'i') : null;
+
       definitions.forEach(def => {
         const card = document.createElement('div');
         card.className = 'def-card';
+        
+        // 3. Shake if it contains the Target OR the Hint
+        if (targetRegex.test(def.text))  {
+          card.classList.add('shake-target');
+        }
+
+        if (hintRegex && hintRegex.test(def.text)) {
+          card.classList.add('hint-highlight');
+        }
+
+
+
+
         card.innerHTML = `<span class="def-pos">${def.partOfSpeech}</span><div class="def-preview">${def.text}</div>`;
         card.onclick = () => openActiveModal(def.text);
         choicesArea.appendChild(card);
@@ -804,7 +865,12 @@
       return tokens.map(token => {
         if (/^[\w'-]+$/.test(token)) {
           const safeWord = token.toLowerCase().replace(/'/g, "\\'");
-          return `<span class="clickable-word" onclick="handleWordClick('${safeWord}')">${token}</span>`;
+          
+          // Determine if this token is the target word
+          const isTarget = token.toLowerCase() === targetWord.toLowerCase();
+          const highlightClass = isTarget ? 'target-highlight' : '';
+
+          return `<span class="clickable-word ${highlightClass}" onclick="handleWordClick('${safeWord}')">${token}</span>`;
         }
         return token;
       }).join('');
@@ -938,15 +1004,15 @@
       loader.style.display = 'none';
       subLoaderText.textContent = "";
 
-      // 3. CACHE AND INFORM RESULTS (Distance Only)
+      // 3. CACHE AND INFORM RESULTS
       if (foundPath) {
         cachedRadarPath = [currentWord, ...foundPath]; 
+
         const targetDepth = foundPath.length; 
-        
         if (targetDepth === 1) {
-          showToast("🔥 SCORCHING! Target is on your screen (Depth 1)!", 5000);
+          showToast("🔥 SCORCHING! Target is on your screen!", 5000);
         } else {
-          showToast(`🟢 PATH FOUND! The target is ${targetDepth} moves away. Use the Hint button if you need help!`, 6000);
+          showToast(`🟢 PATH FOUND! The target is ${targetDepth} moves away.`, 6000);
         }
       } else {
         const reason = rateLimitHit ? "(API Rate Limit Reached)" : "(10s Limit Reached)";
@@ -960,6 +1026,8 @@
         showToast("📡 Please run the Radar first to scan for a path!", 4000);
         return;
       }
+
+      renderChoices(currentDefinitions);
 
       const idx = cachedRadarPath.indexOf(currentWord);
       if (idx !== -1) {
